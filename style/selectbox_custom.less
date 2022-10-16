@@ -1,0 +1,215 @@
+//product-list
+//.categoty-products {
+    .toolbar-products {
+        position:relative;
+        .field.limiter {
+            display:none;
+        }
+        .toolbar-amount {
+            float:left;
+        }
+        .modes {
+            float:right;
+        }
+        .toolbar-sorter {
+            position:absolute;
+            right:0;
+            top:0;
+            .sorter-label,
+            .sorter-options,
+            .sorter-action {
+                display:inline-block;
+                width:1px;
+                height:1px;
+                margin:-1px;
+                overflow:hidden;
+                clip:rect(1px, 1px, 1px, 1px);
+                clip-path:inset(50%);
+            }
+            .custom-sorter {
+                position:relative;
+                .custom-sorter-top {
+                    font-size:13px;
+                    line-height:17px;
+                    font-weight:400;
+                    color:#1a1a1a;
+                    padding:9px 28px 10px 12px;
+                    &::after {
+                        content:'';
+                        width:26px;
+                        height:36px;
+                        background:url('../images/ico_arrow_sorter.png') no-repeat;
+                        background-size:100% auto;
+                        position:absolute;
+                        right:0;
+                        top:0;
+                    }
+                }
+                .custom-sorter-list {
+                    display:none;
+                    position:absolute;
+                    top:36px;
+                    width:100%;
+                    border:1px solid #999;
+                    .option {
+                        font-size:13px;
+                        line-height:17px;
+                        font-weight:400;
+                        color:#1a1a1a;
+                        padding:9px 12px 10px;
+                        cursor:pointer;
+                        & + .option {
+                            border-top:1px solid #999;
+                        }
+                        &.active {
+                            color:#0033C3;
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+
+    @media only screen and (min-width:768px){
+        .toolbar-products {
+            .toolbar-sorter {
+                .custom-sorter {
+                    .custom-sorter-top {
+                        display:none;
+                    }
+                    .custom-sorter-list {
+                        display:flex !important;
+                        position:static;
+                        right:30px;
+                        border:0;
+                        .option {
+                            font-size:14px;
+                            line-height:20px;
+                            font-weight:400;
+                            padding:0;
+                            color:#1a1a1a;
+                            & + .option {
+                                border-top:0;
+                                padding-left:11px;
+                                margin-left:10px;
+                                position:relative;
+                                &::before {
+                                    content:'';
+                                    width:1px;
+                                    height:10px;
+                                    background:#999;
+                                    position:absolute;
+                                    top:5px;
+                                    left:0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+
+
+//}
+
+
+
+
+
+
+
+
+
+//product-detail
+.catalog-product-view {
+    .product.info.detailed {
+        margin-bottom:46px;
+    }
+    .data.item.content {
+        padding:0 !important;
+        box-shadow:none;
+        border:0 !important;
+        .product.attribute.description {
+            padding-bottom:67px;
+            margin-bottom:0;
+        }
+        .ui_accordion {
+            padding:0 12.7%;
+            dl {
+                margin-bottom:0;
+                dt {
+                    margin-bottom:0;
+                    border-top:1px solid #3a4055;
+                    button {
+                        width:100%;
+                        border:0;
+                        color: #1a1a1a;/*ㅊ*/
+                        font-size:14px;
+                        line-height:18px;
+                        font-weight:500;
+                        padding:23px 58px 23px 24px;
+                        height:auto;
+                        background-color: #fff;
+                        text-align:left;
+                        position:relative;
+                        &::after {
+                            content:'';
+                            width:24px;
+                            height:24px;
+                            background:url('../images/button_toggle_open.png') no-repeat;
+                            background-size:100% auto;
+                            position:absolute;
+                            top:23px;
+                            right:24px;
+                        }
+                    }
+                    &.open {
+                        &+ dd {
+                            display:block;
+                        }
+                        button {
+                            &::after {
+                                transform:rotate(180deg);
+                            }
+                        }
+                    }
+                }
+                dd {
+                    display:none;
+                    padding:0 24px 23px 24px;
+                    margin:0;
+                    .data.table {
+                        width:100%;
+                        tr {
+                            .label {
+                                display:none;
+                            }
+                            td {
+                                font-size:13px;
+                                line-height:17px;
+                                font-weight:400;
+                                color:#666;
+                                padding:0;
+                                strong {
+                                    font-size:14px;
+                                    line-height:18px;
+                                    font-weight:500;
+                                    color:#666;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            &:last-child {
+                dl {
+                    border-bottom:1px solid #3a4055;
+                }
+            }
+        }
+    }
+    
+}
