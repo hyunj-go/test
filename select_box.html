@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="style/selectbox_custom.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="toolbar toolbar-products">
+        <div class="toolbar-sorter sorter">
+            <label class="sorter-label" for="sorter">정렬 기준</label> 
+            <!-- [D] change sorter options -->
+            <select id="sorter" data-role="sorter" class="sorter-options">
+                <option value="ragistration" selected="selected">등록일순</option><!-- ragistration date order -->
+                <option value="popularity">인기순</option><!-- popularity order -->
+                <option value="pricehl">높은 가격순</option><!-- price : high to low-->
+                <option value="pricelh">낮은 가격순</option><!-- price : low to hgih-->
+            </select> 
+            <a title="내림차순 설정" href="#" class="action sorter-action sort-asc" data-role="direction-switcher"
+                data-value="desc"><span>내림차순 설정</span>
+            </a>
+            <!-- [D] add custom sorter /Start //-->
+            <div class="custom-sorter" tabindex="0">
+                <div class="custom-sorter-top">
+                    <span class="custom-sorter-text">등록일순</span>
+                </div>
+                <ul class="custom-sorter-list">
+                    <li value="ragistration" class="option" selected="selected">등록일순</li><!-- ragistration date order -->
+                    <li value="popularity" class="option">인기순</li><!-- popularity order -->
+                    <li value="pricehl" class="option">높은 가격순</li><!-- price : high to low-->
+                    <li value="pricelh" class="option">낮은 가격순</li><!-- price : low to hgih-->
+                </ul>
+            </div>
+            <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+            <script>
+            //custom sorter select / interworking with original sorter
+            $('.custom-sorter-top').on('click', function() {
+                $(this).toggleClass('selected');
+                $('.custom-sorter-list').slideToggle();
+            });
+
+            $('.custom-sorter-list .option').on('click', function() {
+                var value = $(this).attr('value');
+                
+                $('.custom-sorter-list .option').removeClass('active');
+                $(this).addClass('active');
+                $('.custom-sorter-text').text($(this).text());
+                $('.sorter-options').val(value);
+                if($(window).width()<768) {
+                    $('.custom-sorter-list').hide();
+                }
+
+                $('.sorter-options').find('option').each(function(index, el) {
+                    if($(el).attr('value') == value) {
+                        $(el).attr('selected', 'selected');
+                    } else {
+                        $(el).removeAttr('selected');
+                    }
+                });
+            });
+
+            if($(window).width()<768) {
+                $(document).on('click', function(e){ 
+                    if(!$('.custom-sorter').is(e.target) && $('.custom-sorter').has(e.target).length === 0){
+                        $('.custom-sorter-list').hide();
+                    }
+                });
+            }
+            </script>
+            <!--// [D] add custom sorter /End --> 
+        </div>
+        <div class="modes"> 
+            <strong class="modes-label" id="modes-label">보기</strong> 
+            <strong title="그리드" class="modes-mode active mode-grid" data-value="grid"><span>그리드</span></strong> 
+            <a class="modes-mode mode-list" title="명부" href="#" data-role="mode-switcher" data-value="list" id="mode-list" aria-labelledby="modes-label mode-list">
+                <span>명부</span>
+            </a> 
+        </div>
+        <!-- [D] add category label(eg.전체보기) / remove text '항목'-->
+        <p class="toolbar-amount" id="toolbar-amount">전체보기 <span class="toolbar-number">12</span> 항목 </p>
+        <div class="field limiter">
+            <label class="label" for="limiter"><span>보기</span></label>
+            <div class="control">
+                <select id="limiter" data-role="limiter" class="limiter-options">
+                    <option value="12" selected="selected">12</option>
+                    <option value="24">24</option>
+                    <option value="36">36</option>
+                </select>
+            </div>
+            <span class="limiter-text">페이지 당</span>
+        </div>
+    </div>
+
+</body>
+
+<script><!-- 임시로 넣음 -->
+    
+    $(document).ready(function() {
+        function changePrice(valQty){
+            var finalPrice = $('.product-addto-price').attr("price-product");
+            var displayPrice = Math.ceil(finalPrice) * valQty;
+            displayPrice = priceUtils.formatPrice(displayPrice);
+            $('.product-addto-price').html(displayPrice);
+        }
+        changePrice($("#qty").val());
+        $(document).on("change","#qty2",function(){
+            var valStick = $(this).val();
+            var valQtydetail = $("#qty").val();
+            if (valStick != valQtydetail){
+                $("#qty").val(valStick);
+                changePrice(valStick);
+                $("#qty").trigger("change");
+            }
+        });
+        $(document).on("click","#product-addtocart-button-stick",function(){
+            $("#product_addtocart_form").submit();
+
+        })
+        var mode;
+        function chkMode() {
+            if ($(window).width()< 768 && mode != "mo") {
+                mode = "mo";
+            }
+            if ($(window).width() > 1024 && mode != "pc") {
+                mode = "pc";
+            }
+        }chkMode();
+
+        $(window).resize(function (e) {
+            chkMode();
+        });
+        
+        if (mode == 'mo' && $('.page-top').length) {
+            var scrolling = false;
+            $(window).scroll(function() {
+                if (0 < $(window).scrollTop() && !scrolling) {
+                    $('body').addClass('page-top-top');
+                    scrolling = true;
+                }
+                if (0 >= $(window).scrollTop() && scrolling) {
+                    $('body').removeClass('page-top-top');
+                    scrolling = false;
+                }
+            });
+
+            if (0 < $(window).scrollTop() && !scrolling) {
+                $('body').addClass('page-top-top');
+                scrolling = true;
+            }
+            if (0 >= $(window).scrollTop() && scrolling) {
+                $('body').removeClass('page-top-top');
+                scrolling = false;
+            }
+        }
+        
+        if($('.product.info.detailed').length){
+            // if( mode == "mo"){
+            //     var topNavigation = ( $(".column.main").height() - $('.product.info.detailed').height() )   - $("header").height() - 40;
+            // }else {
+            //     var topNavigation = ( $(".column.main").height() - $('.product.info.detailed').height() ) - $("header").height() + $(".breadcrumbs").height() - 120;
+            // } 
+            var topNavigation = $('.product.info.detailed').offset().top - fixtop_h;//
+            $(document).on("click",".item.title",function(){
+                if ($('.product.info.detailed.fixed').length){
+                    var idContent = $(this).attr("aria-controls");
+                    var target = $("#"+idContent);
+                    if (target.length)
+                    {
+                        $('html,body').animate({scrollTop: topNavigation }, 1000);
+                        return false;
+                    }
+                }
+            });
+            var $product_cont = $('.product.info.detailed');//
+            var $product_cont_t = $product_cont.offset().top;
+            var $cart_menu = $('.product-bottom-menu');
+            var scrolling2 = false;
+            var fixtop_h = $('header').outerHeight();
+            function prodFix() {
+                // if( mode == "mo"){
+                //     var fixtop_h = 48;
+
+                // }else {
+                //     var fixtop_h = 120;
+                // }
+                //
+                if ($product_cont_t < $(window).scrollTop()+fixtop_h && !scrolling2) {
+                    var valQtydetail = $("#qty").val();
+                    $("#qty2").val(valQtydetail);
+                    changePrice(valQtydetail);
+                    $product_cont.addClass('fixed');
+                    $cart_menu.addClass('open');
+                    scrolling2 = true;
+                }
+                if ($product_cont_t >= $(window).scrollTop()+fixtop_h && scrolling2) {
+                    $("#qty2").val("1");
+                    $product_cont.removeClass('fixed');
+                    $cart_menu.removeClass('open');
+                    scrolling2 = false;
+
+                }
+            }prodFix();
+            $(window).scroll(function() {
+                prodFix();
+            });
+            $(window).resize(function(){
+                $product_cont_t = $product_cont.offset().top;
+                fixtop_h = $('header').outerHeight();//
+                prodFix();
+            });
+        }
+        
+        if($('.cart-summary').length && mode == "pc"){
+            var $summary_cont = $('.cart-summary');
+            var $summary_cont_btm = $summary_cont.offset().top + $summary_cont.outerHeight();
+            var $order_menu = $('.main-order-button');
+            var scrolling3 = false;
+            function orderFix() {
+                if ($summary_cont_btm < $(window).scrollTop()+120 && !scrolling3) {
+                    $order_menu.addClass('open');
+                    scrolling3 = true;
+                }
+                if ($summary_cont_btm >= $(window).scrollTop()+120 && scrolling3) {
+                    $order_menu.removeClass('open');
+                    scrolling3 = false;
+                }
+            }orderFix();
+
+            $(window).scroll(function() {
+                orderFix();
+            });
+
+            $(window).resize(function(){
+                $summary_cont_btm = $summary_cont.offset().top + $summary_cont.outerHeight();
+                prodFix();
+            });
+        }
+    });
+</script>
+
+</html>
