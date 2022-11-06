@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {margin:0;padding:0;line-height:1;}
+        .section {height:100vh;position:relative;}
+        .section1 {display:flex;width:100%;justify-content: center;align-items: center;position:fixed;top:0;}
+        .img {}
+        .img img {display:block;vertical-align:top;height:100vh}
+        .box {width:30%;position:absolute;background:blue;top:0;height:100%;}
+        .right {right:0;}
+        .left {left:0;}
+        .bottom {position:relative;z-index:10;background:#fff;width:100%;top:calc(100vh + 2000px);}
+        .bottom-inner {width:100%;top:0;background:#fff;}
+        .bottom .imgscroll {display:flex;position:relative;}
+        .imgscroll .copy {font-size:10px;position:absolute;left:0;top:0;z-index: 100;}
+        .imgscroll .rightImg {width:100%;}
+        .imgscroll .rightImg li {width:100%;height:100vh;}
+        .imgscroll .rightImg li .half {width:50%;float:right;height:100%;position:relative;overflow:hidden;}
+        .imgscroll .rightImg li img {position:absolute;height:100%;top:50%;left:50%;transform:translate(-50%, -50%);}
+    </style>
+</head>
+<body>
+    <div class="section section1">
+        <div class="img" data-0="transform:scale(.8);" data-2000="transform:scale(1);">
+            <img src="img_main_best_top.jpg" alt="">
+        </div>
+        <div class="right box" data-0="width:30%;" data-2000="width:0"></div>
+        <div class="left box" data-0="width:30%;" data-2000="width:0"></div>
+    </div>
+    <div class="bottom">
+        <div class="bottom-inner">
+            <div class="imgscroll">
+                <div class="copy">HELLO</div>
+                <div class="rightImg">
+                    <ul>
+                        <li>
+                            <div class="half"><img src="img_bestseller.jpg"></div>
+                        </li>
+                        <li>
+                            <div class="half"><img src="img_newproduct.png"></div>
+                        </li>
+                    </ul>
+                    
+                </div>
+            </div>
+            <div class="imgscroll">
+                <div class="copy">HELLO</div>
+                <div class="rightImg">
+                    <ul>
+                        <li>
+                            <div class="half"><img src="img_bestseller.jpg"></div>
+                        </li>
+                        <li>
+                            <div class="half"><img src="img_newproduct.png"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text">
+                texttexttexttexttexttext
+            </div>
+        </div>        
+    </div>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="skrollr.js"></script>
+    <script>
+        var s = skrollr.init();
+        var scrollChk = true;
+        if($(window).scrollTop() > $('.bottom').offset()){
+            $('.bottom').addClass('fix');
+            scrollChk = true;
+        }else {
+            $('.bottom').removeClass('fix');
+            scrollChk = false;
+        }
+        $(window).scroll(function(){
+            if($(window).scrollTop() > $('.bottom').offset().top && scrollChk == false){
+                $('.bottom').addClass('fix');
+                scrollChk = true;
+            }else if($(window).scrollTop() < $('.bottom').offset().top && scrollChk == true) {
+                $('.bottom').removeClass('fix');
+                scrollChk = false;
+            }
+        });
+        
+    </script>
+</body>
+</html>

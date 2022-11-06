@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {margin:0;padding:0;line-height:1;}
+        .section {height:100vh;position:relative;}
+        .section1 {display:flex;width:100%;justify-content: center;align-items: center;position:fixed;top:0;}
+        .img {}
+        .img img {display:block;vertical-align:top;height:100vh}
+        .box {width:30%;position:absolute;background:blue;top:0;height:100%;}
+        .right {right:0;}
+        .left {left:0;}
+        .bottom {position:relative;z-index:10;background:#fff;width:100%;top:calc(100vh + 2000px);}
+        .bottom .imgscroll {display:flex;height:100vh;}
+        .imgscroll .copy {width:50%;font-size:10px;}
+        .imgscroll .rightImg {width:50%;}
+        .imgscroll .rightImg li {height:100vh;position:relative;overflow:hidden;}
+        .imgscroll .rightImg li img {position:absolute;height:100%;top:50%;left:50%;transform:translate(-50%, -50%);}
+    </style>
+</head>
+<body>
+    <div class="section section1">
+        <div class="img" data-0="transform:scale(.8);" data-2000="transform:scale(1);">
+            <img src="img_main_best_top.jpg" alt="">
+        </div>
+        <div class="right box" data-0="width:30%;" data-2000="width:0"></div>
+        <div class="left box" data-0="width:30%;" data-2000="width:0"></div>
+    </div>
+    <div class="bottom">
+        <div class="imgscroll">
+            <div class="copy">HELLO</div>
+            <div class="rightImg">
+                <ul>
+                    <li><img src="img_bestseller.jpg"></li>
+                    <li><img src="img_newproduct.png"></li>
+                </ul>
+                
+            </div>
+        </div>
+        <div class="imgscroll">
+            <div class="copy">HELLO</div>
+            <div class="rightImg"></div>
+        </div>
+        <div class="text">
+            texttexttexttexttexttext
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="skrollr.js"></script>
+    <script>
+        var s = skrollr.init();
+
+        $(window).load(function(){
+            if($('.bottom').offset().top > 0){ console.log('asdf');
+                $(this).css('position','fixed');
+                $('.imgscroll').each(function(index){
+                
+                    $(this).on("wheel", function (e) {
+                        e.preventDefault();
+                        if (!event) event = window.event;
+
+                        var moveTop = $(window).scrollTop();
+                        var elmSelecter = $(this).eq(index);
+
+                        // 마우스휠을 위에서 아래로
+                        if (e.originalEvent.deltaY > 0) {
+                            if ($(elmSelecter).next() != undefined) {
+                                moveTop = $(elmSelecter).next().offset().top;
+                            }
+                        // 마우스휠을 아래에서 위로
+                        } else {
+                            if ($(elmSelecter).prev() != undefined) {
+                                moveTop = $(elmSelecter).prev().offset().top;
+                            }
+                        }
+                        // 화면 이동 0.8초(800)
+                        if(moveTop != undefined){
+                            $("html,body").stop().animate({
+                                scrollTop: moveTop + 'px'
+                            }, {
+                                duration: 800, complete: function () {
+                                }
+                            });
+                        }else {
+                            return;
+                        }
+                        
+                    });
+                
+                });
+            }
+        })
+        
+
+
+
+       
+    </script>
+</body>
+</html>
