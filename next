@@ -1,0 +1,55 @@
+"use client"
+import { useState } from "react";
+
+export default function Creat(){
+    const [modifiedData, setModifiedData] = useState({
+        cont: '',
+        rating: '',
+        bakeryName: '',
+    });
+
+    const handleChange = function({ target: { name, value } }) {
+        console.log(name, value)
+        setModifiedData(prev => ({
+            ...prev,
+            [name]: value,
+        }));
+        console.log(modifiedData);
+    };
+    return (
+        <form onSubmit={(e)=>{
+            e.preventDefault();
+            // const title = e.target.title.value;
+            // const body = e.target.body.value;
+            const options = {
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: modifiedData })
+            }
+            fetch(`http://127.0.0.1:1337/api/reviews`, options)
+            .then(res=>res.json())
+            .then(result=>{
+                console.log(result);
+            })
+        }}>
+            <p>
+                <textarea name="cont" defaultValue={modifiedData.cont} placeholder="content" onChange={handleChange}></textarea>
+            </p>
+            <p>
+                <input type="number" name="rating" defaultValue={modifiedData.rating} placeholder="rating" onChange={handleChange}/>
+            </p>
+            <select name="bakeryName" defaultValue={modifiedData.bakeryName} onChange={handleChange}>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+            <p>
+                <input type="submit" value="create"/>
+            </p>
+        </form>
+    )
+}
