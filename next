@@ -1,26 +1,35 @@
 "use client"
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default function Creat(){
+export default function Create(){
+    const router = useRouter();
     const [modifiedData, setModifiedData] = useState({
-        cont: '',
+        content: '',
         rating: '',
-        bakeryName: '',
+        bakery: 1,
     });
+    // let [lastId, setLastId] = useState(1);
+    // useEffect(()=>{
+    //     setLastId(modifiedData.bakery); console.log('change'+modifiedData.bakery )
+    // }, [modifiedData.bakery])
+    
 
     const handleChange = function({ target: { name, value } }) {
-        console.log(name, value)
+        
+        if(name === 'bakery'){
+            value = parseInt(value)
+        }
+        // console.log(name, value, typeof(value))
         setModifiedData(prev => ({
             ...prev,
             [name]: value,
         }));
-        console.log(modifiedData);
+        // console.log(modifiedData);
     };
     return (
         <form onSubmit={(e)=>{
             e.preventDefault();
-            // const title = e.target.title.value;
-            // const body = e.target.body.value;
             const options = {
                 method:'POST',
                 headers: {
@@ -32,20 +41,22 @@ export default function Creat(){
             .then(res=>res.json())
             .then(result=>{
                 console.log(result);
+                const lastId = modifiedData.bakery; 
+                router.push(`/read/${lastId}`);
             })
         }}>
             <p>
-                <textarea name="cont" defaultValue={modifiedData.cont} placeholder="content" onChange={handleChange}></textarea>
+                <textarea name="content" defaultValue={modifiedData.content} placeholder="content" onChange={handleChange}></textarea>
             </p>
             <p>
-                <input type="number" name="rating" defaultValue={modifiedData.rating} placeholder="rating" onChange={handleChange}/>
+                <input type="text" name="rating" defaultValue={modifiedData.rating} placeholder="rating" onChange={handleChange}/>
             </p>
-            <select name="bakeryName" defaultValue={modifiedData.bakeryName} onChange={handleChange}>
-                <option value="0">0</option>
+            <select name="bakery" defaultValue={modifiedData.bakery} onChange={handleChange}>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
+                <option value="5">5</option>
             </select>
             <p>
                 <input type="submit" value="create"/>
