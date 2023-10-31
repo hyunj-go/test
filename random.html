@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <button type="button" class="button">클릭</button>
+        <div>
+            <p class="score">00</p>
+        </div>
+        <div>
+            <p class="score">00</p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script>
+        $score = $('.score');
+        
+
+        $('.button').click(function(){
+            randomScore(9700);//9700ms
+        })
+
+        function randomScore(sec){
+            var sec = sec;
+            var random = [];
+            for(var i=0; i<$score.length; i++){
+                // $score.eq(i).addClass('score' + i);
+                random[i] = setInterval(setRandom, 100, i); 
+                setTimeout(stopRandom, sec-100, i);
+            }
+
+            function setRandom(i){
+                var txt = (Math.random() * 100).toFixed(1);
+                $score.eq(i).text(txt + '%');
+            }
+            function stopRandom(i){
+                clearInterval(random[i]);
+                if(i==0){
+                    $score.eq(i).text('97.3%');
+                }else if(i==1) {
+                    $score.eq(i).text('47.1%');
+                }
+                
+            }
+
+        }
+    </script>
+</body>
+</html>
