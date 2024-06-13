@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="1.css">
+    <link rel="stylesheet" href="2.css">
+    <link rel="stylesheet" href="3.css">
+    <style>
+        .hsection-wrap {height:700px;}/*임시*/
+        .hsection-wrap.horizontal {display:flex;flex-wrap:nowrap;width:3500px;height:100vh;}
+        .hsection-wrap.horizontal > .camp-story {width:700px;height:100vh;}
+        #camp-story1, #camp-story3, #camp-story5 {background-color:#111;}/* 임시 */
+        .hsection-wrap.horizontal .horizontal-control {width:1080px;position:absolute;top:0;left:0;}
+        
+        .camp-wrap .camp-story-btn-area{position:absolute;top:0;width:51px;height:100vh;opacity:0;transition:opacity .3s;z-index:100;}
+        .camp-wrap .camp-story-btn-area.left{left:180px;}
+        .camp-wrap .camp-story-btn-area.right{right:180px;}
+        .camp-wrap .camp-story-btn-area>a{position:absolute;top:-9999px;left:0;width:51px;transform:translateY(-35px);box-shadow:0 0 20px rgba(0,0,0,.3);}
+        .camp-wrap .camp-story-btn-area>a>img{opacity:.5;}
+        .camp-wrap .camp-story-btn-area>a:hover>img{opacity:1;}
+        .camp-wrap .hsection-wrap.scl-moving .camp-story-btn-area{opacity:1;}
+        .camp-wrap .hsection-wrap.scl-moving .camp-story-btn-area>a{top:50%;}
+        .camp-wrap .hsection-wrap.scl-moving.btn-hide .camp-story-btn-area.right{opacity:0;}
+        .camp-wrap .hsection-wrap.scl-moving.btn-hide .camp-story-btn-area.right>a{top:-9999px;}
+
+        .timeAction .item.active {color:red}
+
+        /*floating button*/
+        .q-menu{position:fixed;right:0;top:50%;width:0;height:548px;transform:translateY(-50%);z-index:11;}
+        .q-menu .section-menu-list{position:absolute;top:0;right:-118px;width:190px;height:198px;padding:29px 0 30px;background:#006ecd;border-radius:10px 0 0 10px;transition:right .5s;}
+        .q-menu .section-menu-list:before{content:'+ QUICK MENU';position:absolute;top:63px;right:55px;width:198px;color:#fff;font-size:22px;font-family:CJONLYONENew;text-align:center;font-weight:400;line-height:72px;transform:rotate(90deg);}
+        .q-menu .section-menu-list>li{display:none;position:relative;padding-left:38px;font-size:18px;font-weight:500;}
+        .q-menu .section-menu-list>li+li{margin-top:12px;}
+        .q-menu .section-menu-list>li+li:before{content:'';position:absolute;left:23px;top:-24px;width:1px;height:38px;background:#4b93d3;z-index:0;}
+        .q-menu .section-menu-list>li>a{color:#b0d0ec;text-decoration:none;}
+        .q-menu .section-menu-list>li>a>span:before{content:'';position:absolute;top:50%;left:20px;width:8px;height:8px;background:#b0d0ec;border-radius:4px;transform:translateY(-50%);z-index:1;}
+        .q-menu .section-menu-list>li.active>a{color:#fff;}
+        .q-menu .section-menu-list>li.active>a>span:before{background:#fff;}
+
+        .q-menu .section-menu-list.active,
+        .q-menu .section-menu-list:hover{right:0;}
+        .q-menu .section-menu-list.active>li,
+        .q-menu .section-menu-list:hover>li{display:block;}
+        .q-menu .section-menu-list:hover:before{opacity:0;}
+
+        .q-menu.fixed{width:100vw;min-width:1380px;position:absolute;bottom:0;top:auto;left:50%;transform:translateX(-50%);right:auto;}
+            
+        .q-menu [class^="btn-"]>span{position:absolute;top:-9999px;left:-9999px;}
+
+        .q-menu .btn-share-new{width:22px;height:24px;}
+        .q-menu .btn-share-new .ico-share{width:22px;height:24px;background-position:0 -238px;}
+        .q-menu .btn-print-new{width:28px;height:24px;}
+        .q-menu .btn-print-new .ico-print{width:28px;height:24px;background-position:-33px -238px;}
+
+        .q-menu .share-btn-wrap{position:absolute;top:10px;right:60px;width:120px;font-size:0;text-align:right;}
+        .q-menu .share-btn-wrap>a{display:inline-block;}
+        .q-menu .share-btn-wrap>a+a{margin-left:6px;}
+
+        .q-menu .btn-share-facebook,
+        .q-menu .btn-share-kakao,
+        .q-menu .btn-share-copy{width:34px;height:34px;padding-top:10px;text-align:center;background:#333;border-radius:17px;}
+        .q-menu .btn-share-facebook{top:335px;right:148px;padding-top:9px;}
+        .q-menu .btn-share-kakao{top:335px;right:108px;padding-top:9px;}
+        .q-menu .btn-share-copy{top:335px;right:68px;padding-top:8px;}
+        .q-menu .btn-share-facebook .ico-facebook{width:8px;height:16px;background-position:-78px -241px;}
+        .q-menu .btn-share-kakao .ico-kakao{width:17px;height:15px;background-position:-101px -241px;}
+        .q-menu .btn-share-copy .ico-copy{width:16px;height:14px;background-position:-134px -239px;}
+
+        .q-menu .btn-move-top{position:absolute;bottom:0;right:22px;width:46px;height:46px;border:2px solid #969696;border-radius:50%;}
+        .q-menu .btn-move-top:before{content:'';position:absolute;top:50%;left:50%;width:17px;height:12px;background:url(/static/pc/global/template/images/efulfillment/icon_arrow_top_dark.png) no-repeat 0 0;background-size:17px 9px;transform:translate(-50%, -50%);}
+
+        /**/
+        .q-menu [class^="ico-"]{display:inline-block;background-image:url(/static/pc/global/template/images/efulfillment/icon_sprites.png);background-repeat:no-repeat;}
+
+        .q-menu{height:504px;z-index:21;}
+        .q-menu .section-menu-list{right:0;width:72px;overflow:hidden;transition:width .5s;}
+        .q-menu .section-menu-list>li{width:198px;}
+        .q-menu .section-menu-list>li+li{margin-top:16px;}
+        .q-menu .section-menu-list>li>a>span{letter-spacing:-.075em;}
+        .q-menu .section-menu-list.active,
+        .q-menu .section-menu-list:hover{right:0;width:198px;}
+        .q-menu .section-menu-list:before{left:-63px;letter-spacing:-.025em;}
+
+        .q-menu .btn-simply-estimate,
+        .q-menu .btn-business-inquiry{display:block;width:60px;height:60px;margin:0 auto;padding:16px 5px 0;font-size:13px;text-decoration:none;overflow:hidden;}
+        .q-menu .btn-simply-estimate{bottom:234px;right:16px;}
+        .q-menu .btn-business-inquiry{bottom:166px;right:16px;}
+
+        .q-menu .btn-share-new,
+        .q-menu .btn-print-new{display:block;margin:0 auto;text-decoration:none;overflow:hidden;}
+        .q-menu .btn-share-new .ico-share,
+        .q-menu .btn-print-new .ico-print{display:inline-block;background-image:url(/static/pc/global/template/images/efulfillment/icon_sprites.png);background-repeat:no-repeat;}
+
+        .q-menu .util-menu-list>ul{position:absolute;bottom:55px;right:22px;width:46px;padding:10px 0;border:2px solid #969696;;border-radius:24px;}
+        .q-menu .util-menu-list>ul>li{padding:5px 0;text-align:center;}
+        .q-menu .util-menu-list>ul>li+li{margin-top:10px;}
+        .q-menu .util-menu-list>ul:after{content:'';position:absolute;top:50%;left:50%;width:28px;height:2px;background:#969696;transform:translate(-50%, -50%);}
+    </style>
+</head>
+<body>
+    <div id="header" data-current="5-1" class="default active" data-top="0">
+        <div id="inner">
+            <div class="left-motion">
+                <h1>
+                    <a href="/ko/main" onclick="GA_Event('공통', 'CJ LOGISTICS LOGO', '클릭');">CJ대한통운 </a>
+                </h1>
+            </div>
+    
+            <nav id="gnb" class="active">
+                <ul class="menudepth1">
+                    
+                    <li data-menu="1" class="active">
+                        <a href="/ko/newsroom" class="anchor" onclick="GA_Event('공통', 'GNB', 'NOW')"><span>NOW</span></a>
+                        
+                    </li>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <li data-menu="5" class="">
+                        <a href="/ko/sustainability" class="anchor" onclick="GA_Event('공통', 'GNB', '지속가능경영')"><span>지속가능경영</span></a>
+                        
+                    </li>
+                    
+                    
+                    
+                </ul>
+            </nav>
+    
+            <!-- //gnb -->
+            
+        </div>
+        <!-- //inner -->
+    
+        
+        
+        
+    
+        <!-- siteMap-wrap -->
+        
+        
+    </div>
+
+    <div id="skipCt">
+        <!-- 서브페이지 상단 -->
+        <div data-control="subLocation">
+        
+            
+        
+        
+        
+        
+            
+                <div id="box-common-location" class="location fixedTarget fixed-scroll" data-offset="73" data-height="44" style="z-index: 900; top: 0px;">
+                    <ul>
+                        <li class="home">홈</li>
+                        
+                        
+                        
+                            
+                                <li>
+                                    <a href="/ko/sustainability" class="btn-list" data-accessibilityopen="리스트 열기" data-accessibilityclose="리스트 닫기" title="리스트 열기">지속가능경영</a>
+                                    <div class="list-menu">
+                                        <ul>
+                                        
+                                            
+                                                <li>
+                                                    <a href="/ko/newsroom" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','NOW');">NOW</a>
+                                                </li>
+                                            
+                                        
+                                            
+                                                <li>
+                                                    <a href="/ko/business" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','사업소개');">사업소개</a>
+                                                </li>
+                                            
+                                        
+                                            
+                                                <li>
+                                                    <a href="/ko/network/country" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','글로벌 네트워크');">글로벌 네트워크</a>
+                                                </li>
+                                            
+                                        
+                                            
+                                                <li>
+                                                    <a href="/ko/about/brand/message" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','회사정보');">회사정보</a>
+                                                </li>
+                                            
+                                        
+                                            
+                                                <li>
+                                                    <a href="/ko/sustainability" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','지속가능경영');" class="on" title="현재 페이지">지속가능경영</a>
+                                                </li>
+                                            
+                                        
+                                            
+                                                <li>
+                                                    <a href="/ko/support/contacts" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','고객지원');">고객지원</a>
+                                                </li>
+                                            
+                                        
+                                            
+                                                <li>
+                                                    <a href="/ko/tool/parcel/tracking" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','배송조회/예약');">배송조회/예약</a>
+                                                </li>
+                                            
+                                        
+                                            
+                                                <li>
+                                                    <a href="/ko/agreement/condition-parcel" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','유틸리티');">유틸리티</a>
+                                                </li>
+                                            
+                                        
+                                            
+                                        
+                                            
+                                        
+                                            
+                                        
+                                            
+                                        
+                                        </ul>
+                                    </div>
+                                </li>
+                            
+                            
+                                <li>
+                                    <a href="/ko/page/sustainability/message" class="btn-list" data-accessibilityopen="리스트 열기" data-accessibilityclose="리스트 닫기" title="리스트 열기">지속가능경영</a>
+                                    <div class="list-menu">
+                                        <ul>
+                                        <!-- 20220602 이커머스 간편견적 메뉴에서 가림처리  -->
+                                        
+                                            
+                                                <li>
+                                                
+                                                
+                                                
+                                                
+                                                    <a href="/ko/page/sustainability/message" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','지속가능경영');" class="on" title="현재 페이지">지속가능경영</a>
+                                                
+                                                
+                                                </li>
+                                            
+                                        
+                                            
+                                                <li>
+                                                
+                                                
+                                                
+                                                
+                                                    <a href="/ko/cjl_ethics/principle" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','윤리경영');">윤리경영</a>
+                                                
+                                                
+                                                </li>
+                                            
+                                        
+                                        </ul>
+                                    </div>
+                                </li>
+                            
+                            
+                                <li>
+                                    <a href="/ko/page/sustainability/goal" class="btn-list" data-accessibilityopen="리스트 열기" data-accessibilityclose="리스트 닫기" title="리스트 열기">전략 &amp; 거버넌스</a>
+                                    <div class="list-menu">
+                                        <ul>
+                                        
+                                            
+                                                <li>
+                                                
+                                                
+                                                
+                                                
+                                                    <a href="/ko/page/sustainability/message" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','ESG 메시지');">ESG 메시지</a>
+                                                
+                                                
+                                                </li>
+                                            
+                                        
+                                            
+                                                <li>
+                                                
+                                                
+                                                
+                                                
+                                                    <a href="/ko/page/sustainability/goal" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','전략 &amp; 거버넌스');" class="on" title="현재 페이지">전략 &amp; 거버넌스</a>
+                                                
+                                                
+                                                </li>
+                                            
+                                        
+                                            
+                                                <li>
+                                                
+                                                
+                                                
+                                                
+                                                    <a href="/ko/page/sustainability/environmental" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','환경(Environmental)	');">환경(Environmental)	</a>
+                                                
+                                                
+                                                </li>
+                                            
+                                        
+                                            
+                                                <li>
+                                                
+                                                
+                                                
+                                                
+                                                    <a href="/ko/page/sustainability/social" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','사회(Social)');">사회(Social)</a>
+                                                
+                                                
+                                                </li>
+                                            
+                                        
+                                            
+                                                <li>
+                                                
+                                                
+                                                
+                                                
+                                                    <a href="/ko/page/sustainability/governance" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','지배구조(Governance)');">지배구조(Governance)</a>
+                                                
+                                                
+                                                </li>
+                                            
+                                        
+                                            
+                                                <li>
+                                                
+                                                
+                                                
+                                                
+                                                    <a href="/ko/sustainability/report" onclick="GA_Event('지속가능경영_지속가능경영','SUB_GNB','ESG 자료실');">ESG 자료실</a>
+                                                
+                                                
+                                                </li>
+                                            
+                                        
+                                        </ul>
+                                    </div>
+                                </li>
+                            
+                        
+                        
+                    </ul>
+                </div>
+            
+        
+        
+            <!-- 서브비쥬얼영역 -->
+            
+            
+                <div class="box-subTop ani-on">
+        <div class="bg">
+        <div class="hide-on-pc" style="background-image:url('/static/pc/global/template/images/2020Renewal/img_subTop_sustainablity.jpg')"></div>
+        
+        <div class="hide-on-mobile" style="background-image:url('/static/m/global/template/images/2020Renewal/img_subTop_sustainablity.jpg')"></div>
+        </div>
+        
+        <div class="txt-wrap">
+        <div class="txt-inner">
+        <h2 class="hidden">Title</h2>
+        
+        <h3 class="title-1 ani-1 delay-1">Title</h3>
+        
+        <p class="txt-1 ani-1 delay-2">끊임없이 노력하겠습니다.</p>
+        </div>
+        </div>
+        </div>
+        
+            
+            
+            
+            <!-- //서브비쥬얼영역 -->
+        
+        </div>
+        <!-- //서브페이지 상단 -->
+        
+        <!-- tab1 -->
+            <div class="common-tab1depthType-1 fixedTarget fixed-scroll" id="subTabmenu" data-offset="446" data-height="67">
+                <ul>
+                    
+                        <li>
+                            <h4>
+                            
+                            
+                            
+                                <a href="/ko/page/sustainability/message" onclick="GA_Event('지속가능경영_지속가능경영', 'ESG 메시지', '클릭');"><span>ESG 메시지</span></a>
+                            
+                            
+                            </h4>
+                        </li>
+                    
+                        <li>
+                            <h4>
+                            
+                            
+                            
+                                <a href="/ko/page/sustainability/goal" onclick="GA_Event('지속가능경영_지속가능경영', '전략 &amp; 거버넌스', '클릭');" class="on" title="현재 선택"><span>전략 &amp; 거버넌스</span></a>
+                            
+                            
+                            </h4>
+                        </li>
+                    
+                        
+                    
+                        <li>
+                            <h4>
+                            
+                            
+                            
+                                <a href="/ko/page/sustainability/social" onclick="GA_Event('지속가능경영_지속가능경영', '사회(Social)', '클릭');"><span>사회(Social)</span></a>
+                            
+                            
+                            </h4>
+                        </li>
+                    
+                        <li>
+                            <h4>
+                            
+                            
+                            
+                                <a href="/ko/page/sustainability/governance" onclick="GA_Event('지속가능경영_지속가능경영', '지배구조(Governance)', '클릭');"><span>지배구조(Governance)</span></a>
+                            
+                            
+                            </h4>
+                        </li>
+                    
+                        <li>
+                            <h4>
+                            
+                            
+                            
+                                <a href="/ko/sustainability/report" onclick="GA_Event('지속가능경영_지속가능경영', 'ESG 자료실', '클릭');"><span>ESG 자료실</span></a>
+                            
+                            
+                            </h4>
+                        </li>
+                    
+                </ul>
+            </div>
+        <!-- //tab1 -->
+            <!-- 서브 4뎁스 타이틀 -->
+            <h4 class="title-sub4depth">
+            전략 &amp; 거버넌스
+            </h4>
+            <!-- //서브 4뎁스 타이틀 -->
+            <!-- grid1080 -->
+            <div class="grid1080">
+                <!-- 반응형 영역 -->
+                <div class="box-pmCms">
+                    <!-- 분문 -->
+                    <div class="camp-wrap grid1080 bg-whSustain-1 new_pcm hidden-title new-sustainability">
+                        <h5 class="title-sub4depth">전략 &amp; 거버넌스</h5>
+                        <section id="hsection1" class="hsection-wrap hsection-wrap1 q-section"></section>
+                        <section id="hsection2" class="hsection-wrap hsection-wrap2 q-section">
+                            <ul class="perform-list timeAction js-timeAction">
+                                <li class="item active">1</li>
+                                <li class="item">2</li>
+                                <li class="item">3</li>
+                                <li class="item">4</li>
+                                <li class="item">5</li>
+                            </ul>
+                        </section>
+                        <section id="hsection3" class="hsection-wrap hsection-wrap3 q-section"></section>
+                        <section id="hsection4" class="horizontal hsection-wrap hsection-wrap4 q-section">
+                            <div class="camp-story camp-story1" id="camp-story1">1</div>
+                            <div class="camp-story camp-story2" id="camp-story2">2</div>
+                            <div class="camp-story camp-story3" id="camp-story3">3</div>
+                            <div class="camp-story camp-story4" id="camp-story4">4</div>
+                            <div class="camp-story camp-story5" id="camp-story5">5</div>
+
+                            <div class="horizontal-control">
+                                <div class="camp-story-btn-area left">
+                                    <a href="#" class="btn-story-scroll left"><img src="/static/pc/global/template/images/brand/bg_btn_arrow_l.png" alt="스크롤 올리기"></a>
+                                </div>
+                                <div class="camp-story-btn-area right">
+                                    <a href="#" class="btn-story-scroll right"><img src="/static/pc/global/template/images/brand/bg_btn_arrow_r.png" alt="스크롤 내리기"></a>
+                                </div>
+                            </div>
+                        </section>
+                        <section id="hsection5" class="hsection-wrap hsection-wrap5 q-section">
+                            testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest
+                        </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        <div class="q-menu">
+                            <ul class="section-menu-list">
+                                <li class="active">
+                                    <a href="#hsection1" class="section-menu">
+                                        <span>‘오네’ 브랜드 영상</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#hsection2" class="section-menu">
+                                        <span>‘오네’ 브랜드 스토리</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#hsection3" class="section-menu">
+                                        <span>‘오네’ 배송 서비스</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#hsection4" class="section-menu">
+                                        <span>‘오네’ 최신 소식</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#hsection5" class="section-menu">
+                                        <span>‘오네’ 최신 소식</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="util-menu-list">
+                                <ul>
+                                    <li>
+                                        <a href="#" class="btn-share-new"><span>공유하기</span><i class="ico-share"></i></a>
+                                        <div class="share-btn-wrap" style="display:none;">
+                                            <a href="#" class="btn-share-facebook" onclick="fncGlobalShare('facebook');GA_Event('사업소개_브랜드_오네','SNS','facebook');return false;" title="페이스북 새창 열기"><span>페이스북 공유하기</span><i class="ico-facebook"></i></a>
+                                            <a href="#" class="btn-share-kakao" onclick="fncGlobalShare('kakao');GA_Event('사업소개_브랜드_오네','SNS','kakao');return false;" title="카카오톡 새창 열기"><span>카카오톡 공유하기</span><i class="ico-kakao"></i></a>
+                                            <a href="#" class="btn-share-copy btnUrlCopy"><span>현재 URL 복사하기</span><i class="ico-copy"></i></a>
+                                            <textarea id="virtualTextarea" class="hidden" rows="1" cols="30" title="url복사" tabindex="-1" readonly="" aria-hidden="true"></textarea>
+                                        </div>
+                                    </li>
+                                    <li><a href="#ly-print" class="btn-print-new"><span>프린트하기</span><i class="ico-print"></i></a></li>
+                                </ul>
+                                <a href="#top" class="btn-move-top">
+                                    <span>페이지 상단으로 이동</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- //분문 -->
+                </div>
+                <!-- //반응형 영역 -->
+        
+            </div>
+            <!-- //grid1080 -->
+        
+            
+        
+    </div>
+
+    <div data-control="btnTop" class="common-btnTopType-1 mainBtm over fx" style="top: auto; bottom: 306px;"><!-- 2022-03-18 클래스 추가 -->
+        <div class="quick-menu show">
+            <ul class="list-btn">
+                <li class="share-wrap">
+                    <a href="#none" class="btn-share icon-2" title="공유하기 레이어 열기" data-accessibilityopen="공유하기 레이어 열기" data-accessibilityclose="공유하기 레이어 닫기"><span>공유하기</span></a>
+                    <div class="list-share">
+                        <ul>
+                            
+                            
+                            
+                            <li><a href="#none" onclick="fncGlobalShare('facebook');GA_Event('지속가능경영_지속가능경영','SNS','facebook');" class="icon-5" title="페이스북 새창 열기"><span>페이스북</span></a></li>
+                            <li><a href="#none" onclick="fncGlobalShare('kakao');GA_Event('지속가능경영_지속가능경영','SNS','kakao');" class="icon-8" title="카카오톡 새창 열기"><span>카카오톡</span></a></li>
+                            
+                            
+                            
+                            <li><a href="#none" class="icon-3 btnUrlCopy" title="url복사"><span>url복사</span></a>
+                                <textarea id="virtualTextarea" class="hidden" rows="1" cols="30" title="url복사" tabindex="-1" readonly="" aria-hidden="true"></textarea>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="btn-layer-open"><a href="#ly-print" class="icon-1 printScrollDown" title="프린트하기"><span>프린트하기</span></a></li><!-- 171229 phr class명 추가 -->
+    
+            </ul>
+            <a href="#header" class="btn-top" title="페이지 상단으로 이동">
+                <span class="icon">페이지 상단으로 이동</span>
+            </a>
+        </div>
+        
+    </div>
+
+    <div id="footer">
+        <h2 class="hidden">
+            하단 영역
+            
+        </h2>
+        <!-- box-menu -->
+        <div class="box-menu">
+            <div class="inner box-contain">
+                <ul class="list-type-1">
+                
+                    <li>
+                        <a href="/ko/newsroom">NOW</a>
+                        <ul>
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/newsroom/latest">LATEST</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/newsroom/news">보도자료</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/newsroom/event">이벤트</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/newsroom/notice">공지사항</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/now/newsletter">CJ대한통운 NOW 구독</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                        </ul>
+                    </li>
+                
+                    <li>
+                        <a href="/ko/business">사업소개</a>
+                        <ul>
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/business">One-Stop 물류솔루션</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/tes/story/technology">TES</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/o-ne">브랜드</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/onepager/fashion">Logis Tips</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                        </ul>
+                    </li>
+                
+                    <li>
+                        <a href="/ko/network/country">글로벌 네트워크</a>
+                        <ul>
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/network/country">글로벌 현황</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/network/newFamily">Global Family</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/network/infra">글로벌 물류 인프라</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                        </ul>
+                    </li>
+                
+                    <li>
+                        <a href="/ko/about/brand/message">회사정보</a>
+                        <ul>
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/about/brand/message">회사소개</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/about/brand/story">라이브러리</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/about/sponsorship/motorsports">스폰서십</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/page/investment/composition">투자정보</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/page/about/cj-way">인재채용</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                        </ul>
+                    </li>
+                
+                    <li>
+                        <a href="/ko/sustainability">지속가능경영</a>
+                        <ul>
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/page/sustainability/message">지속가능경영</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/cjl_ethics/principle">윤리경영</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                        </ul>
+                    </li>
+                
+                    <li>
+                        <a href="/ko/support/contacts">고객지원</a>
+                        <ul>
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/support/contacts" onclick="GA_Event('공통', '박스메뉴', '고객지원_사업문의' );">사업문의</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/support/inquiry/agreement">서비스문의</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/support/faq">자주 묻는 질문</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                            
+                        
+                        </ul>
+                    </li>
+                
+                    <li>
+                        <a href="/ko/tool/parcel/tracking">배송조회/예약</a>
+                        <ul>
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/tool/parcel/tracking">배송조회</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/tool/parcel/reservation-general">택배예약</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/tool/parcel/reservation-return">반품예약</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                     <!--  PC_00000231 : 챗봇 -->
+                                        <a href="#none" onclick="globalBannerManager('ko', 'K1', '04', 'https://chatbotweb.cjlogistics.com/indexCj.do?media=COM','챗봇상담', 'scrollbars=yes, width=800, height=1500');" title="새창"> 챗봇상담 </a>
+                                    
+                                    
+                                    
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/tool/international/tracking">국제특송조회</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                    
+                                    <!-- PC_00000007 : 고객지원,  PC_00000083 : 사업별 문의처 -->
+                                        <a href="/ko/tool/removal/domestic-quotation">국내이사 간편 견적</a>
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                        <a href="https://forwarders.cjlogistics.com" target="_blank">포워딩 간편 견적(포워더스)</a>
+                                    
+                                    
+                                    
+                                
+                                </li>
+                                
+                            
+                        
+                             <!--PC_00000305 : 이커머스 간편 견적  -->
+                                <li>
+                                
+                                    
+                                    
+                                        <a href="https://www.unban.ai/" target="_blank">the unban[더 운반]</a>
+                                    
+                                    
+                                    
+                                
+                                </li>
+                                
+                                    <li>
+                                        <a href="/ko/estimate/estimate" onclick="GA_Event('공통', '박스메뉴', '택배조회예약_이커머스 물류 간편 견적');">이커머스 물류 간편 견적 </a>
+                                    </li>
+                                
+                            
+                        
+                        </ul>
+                    </li>
+                
+                </ul>
+    
+                
+                
+                <div class="box-familySite type2" data-control="btnFamilySite">
+                    <a href="#none" class="btn" data-accessibilityopen="레이어 열기" data-accessibilityclose="레이어 닫기" title="레이어 열기">Global<span class="icon"></span></a>
+                    <div class="list-family">
+                        <ul>
+                            <li>
+                                <span class="tt-1 hidden">Global</span>
+                                <ul style="margin-top: 0px; margin-bottom: 0px;">
+                                
+                                    <li><a href="https://america.cjlogistics.com/" target="_blank" title="새창">CJ Logistics America </a></li>
+                                
+                                    <li><a href="https://www.cjcentury.com/" target="_blank" title="새창">CJ Century Logistics</a></li>
+                                
+                                    <li><a href="http://www.darcl.com/" target="_blank" title="새창">CJ Darcl Logistics</a></li>
+                                
+                                    <li><a href="http://www.gemadeptlogistics.com.vn/" target="_blank" title="새창">CJ Gemadept Logistics</a></li>
+                                
+                                    <li><a href=" http://www.gemadeptshipping.vn/en/Default.aspx" target="_blank" title="새창">CJ Gemadept Shipping</a></li>
+                                
+                                    <li><a href="http://cj-icm.com/" target="_blank" title="새창">CJ ICM Logistics</a></li>
+                                
+                                    <li><a href="http://www.cjsmartcargo.com/" target="_blank" title="새창">CJ Smart Cargo</a></li>
+                                
+                                    <li><a href="http://www.cjspd.com/" target="_blank" title="새창">CJ Speedex Logistics</a></li>
+                                
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+    
+                
+                <ul class="list-type-2">
+                    
+                    <li>
+                        <a href="http://www.cjenc.co.kr/" target="_blank" title="새창" onclick="GA_Event('공통','건설부문','클릭');">건설부문</a>
+                    </li>
+                    <li>
+                        <a href="https://forwarders.cjlogistics.com" target="_blank" title="새창" onclick="GA_Event('공통','LoIS 포워더스','클릭');">LoIS 포워더스</a>
+                    </li>
+                    <li>
+                        <a href="https://www.unban.ai/" target="_blank" title="새창" onclick="GA_Event('공통',the unban [더 운반]','클릭');"><strong class="tx-bodyfont-regular">the unban</strong> [더 운반]</a>
+                    </li>
+                    <li>
+                        <a href="http://www.korexmall.co.kr" target="_blank" title="새창" onclick="GA_Event('공통','유록스 쇼핑몰','클릭');">유록스 쇼핑몰 </a>
+                    </li>
+                </ul>
+                
+            </div>
+        </div>
+        <!-- //box-menu -->
+        <!-- box-menu-2 -->
+        
+        <!-- //box-menu-3 -->
+    </div>
+
+
+
+
+    <script src="/jquery-1.12.1.min.js"></script>
+    <script src="/front.js"></script>
+    <script src="/common.js"></script>
+    <!-- 관리자 CMS 스크립트 있는 경우에만 -->
+    <script src="/page.js"></script>
+    <script src="../ScrollMagic.min.js"></script>
+    <script src="../gsap.min.js"></script>
+    <script src="../animation.gsap.min.js"></script>
+
+
+    <script type="text/javascript">
+        $(function(){
+            if ($('#skipCt').find('.camp-wrap').length > 0) {
+                $('.common-btnTopType-1').hide();
+            }
+    
+            const $horizontal = $(".hsection-wrap.horizontal");
+            const $hsections = $(".hsection-wrap.horizontal > .camp-story");
+    
+            // ScrollMagic 컨트롤러 생성
+            const controller = new ScrollMagic.Controller();
+    
+            const horizontalScrollTween = gsap.to($hsections, {
+                xPercent: -100 * ($hsections.length - 1),
+                ease: "power1.inOut" // 부드러운 이징 설정
+            });
+    
+            // ScrollMagic 씬 생성 및 설정
+            const scene = new ScrollMagic.Scene({
+                triggerElement: $horizontal[0],
+                triggerHook: "onLeave",
+                duration: $horizontal[0].offsetWidth - window.innerWidth,
+                scrub: 1 // 스크롤과 애니메이션을 동기화하여 부드러운 애니메이션
+            })
+            .setPin($horizontal[0])
+            .setTween(horizontalScrollTween)
+            .addTo(controller);
+    
+            // 창 크기 변경 시 ScrollMagic 씬의 duration 갱신
+            $(window).on("resize", function() {
+                scene.duration($horizontal[0].offsetWidth - window.innerWidth);
+            });
+    
+            // 오네 스토리 스크롤
+            $('.btn-story-scroll').on({
+                'click' : function(e){
+                    e.preventDefault();
+                    let cur_pos = $(window).scrollTop();
+                    if($(this).hasClass('left')){
+                        $(window).scrollTop(cur_pos - 770);
+                    }else{
+                        $(window).scrollTop(cur_pos + 770);
+                    }
+                }
+            });
+    
+    
+            $('.q-menu .section-menu').click(function(e){
+                e.preventDefault();
+                let _target = $(this).attr('href');
+                let _target_pos = $(_target).offset().top;
+    
+                $('html, body').stop().animate({ scrollTop : _target_pos }, 500);
+            });
+    
+            
+    
+            $(window).scroll(function(){
+                fnMotionScroll();
+            });
+    
+            let curPagePos = 0;
+            let motionPos;
+            let winHeight = $(window).height();
+    
+            $(window).resize(function(){
+                winHeight = $(window).height();
+            });
+    
+            /*$('.btn-scroll-start').on({
+                'click': function(e){
+                    e.preventDefault();
+                    let target_pos = parseInt($('.o-nestory').offset().top, 10);
+                    if(target_pos > parseInt($(window).scrollTop(), 10) || target_pos + 324 > parseInt($(window).scrollTop(), 10)){
+                        $(window).scrollTop(target_pos + 324);
+                    }
+                }
+            });*/
+    
+            const horizontalTop = $horizontal.offset().top;
+            const $horizontalNext = $horizontal.parent().next();
+            const horizontalContNextTop = $horizontalNext.offset().top;
+            function fnMotionScroll(){ 
+                curPagePos = $(window).scrollTop();								//현재 스크롤 위치
+                motionPos =  curPagePos + parseInt(winHeight * 0.65, 10);		//모션이 시작될 위치
+            
+                if((horizontalTop + 700) < motionPos){
+                    $horizontal.addClass('scl-moving');
+                }else{
+                    $horizontal.removeClass('scl-moving');
+                }
+                if(horizontalContNextTop < curPagePos + winHeight + 200){
+                    $horizontal.addClass('btn-hide');
+                }else{
+                    $horizontal.removeClass('btn-hide');
+                }
+    
+                if(horizontalContNextTop < curPagePos + winHeight){
+                    $horizontal.addClass('fixed');
+                }else{
+                    $horizontal.removeClass('fixed');
+                }
+        
+                fnFloatMenu(curPagePos, motionPos);
+            }
+    
+            // 퀵 메뉴 위치 설정
+            let _FooterPos = $('#footer').offset().top;
+    
+            function fnFloatMenu(pos1, pos2){
+                if(pos2 > winHeight){
+                    if($('.q-menu').css('display') != 'block'){
+                        $('.q-menu').fadeIn(300);
+                    }
+                }else{
+                    if($('.q-menu').css('display') == 'block'){
+                        $('.q-menu').fadeOut(100);
+                    }
+                }
+                if($('.q-menu').css('display') == 'block'){
+                    $('.q-section').each(function(idx){
+                        if(pos2 > $(this).offset().top){
+                            if(!$('.q-menu > ul > li').eq(idx).hasClass('active')){
+                                $('.q-menu > ul > li').eq(idx).addClass('active').siblings().removeClass('active');
+                            }
+                        }
+                    });
+                }
+    
+                if(_FooterPos < pos1 + winHeight){			// 스크롤이 푸터에 위치할 경우 사이드 메뉴 고정
+                    $('.q-menu').addClass('fixed');
+                }else{
+                    $('.q-menu').removeClass('fixed');
+                }
+            }
+    
+            fnMotionScroll();
+    
+            //퀵메뉴 공유하기 버튼 보이기/숨김
+            $('.btn-share-new').on({
+                'click' : function(e){
+                    e.preventDefault();
+                    $('.share-btn-wrap').toggle();
+                }
+            });
+    
+            // 퀵메뉴 공유하기 영역 제외 클릭 시 공유하기 레이어 숨김처리
+            $(document).click(function(e){
+                if($(e.target).parents('.btn-share-new').length == 0){
+                    if($(e.target).parents('.share-btn-wrap').length ==0){
+                        $('.share-btn-wrap').hide();
+                    }
+                }
+            });
+            // 퀵메뉴 프린트
+            $(document).on('click','.btn-print-new',function(e){
+                e.preventDefault();
+                var target = $(this).attr('href');
+                    openModalLayer(target, this);
+    
+                $('body').addClass('common-layerTypeOh-1');
+                $('html, body').stop().animate({ scrollTop : $(document).height() }, 700);
+            });
+    
+            // 퀵메뉴 탑 버튼
+            $('.btn-move-top').on('click', function(e){
+                e.preventDefault();
+                //$(window).scrollTop(0);
+                $('html, body').stop().animate({ scrollTop : 0 }, 700);
+            });
+    
+    
+            //time action
+            let actionCnt = 0;
+            function timeAction() {
+                const actionCont = $('.js-timeAction'); 
+                const actionItem = actionCont.find('.item');
+                const actionItemLen = actionItem.length;
+                
+                actionCnt = actionCnt + 1;
+                if(actionCnt == actionItemLen) actionCnt = 0;
+                actionItem.removeClass('active');
+                $(actionItem[actionCnt]).addClass('active');
+            }
+            setInterval(timeAction, 2000);
+    
+        })
+        </script>
+
+
+</body>
+</html>
