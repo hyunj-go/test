@@ -468,7 +468,14 @@
                                 <li class="item">5</li>
                             </ul>
                         </section>
-                        <section id="hsection3" class="hsection-wrap hsection-wrap3 q-section"></section>
+                        <section id="hsection3" class="hsection-wrap hsection-wrap3 q-section">
+                            <ul class="stepMotion">
+                                <li>원</li>
+                                <li>투</li>
+                                <li>쓰리</li>
+                                <li>포</li>
+                            </ul>
+                        </section>
                         <section id="hsection4" class="horizontal hsection-wrap hsection-wrap4 q-section">
                             <div class="camp-story camp-story1" id="camp-story1">1</div>
                             <div class="camp-story camp-story2" id="camp-story2">2</div>
@@ -1170,6 +1177,7 @@
                 motionTop =  curPageTop + parseInt(winH * 0.65, 10);		//모션이 시작될 위치
                 fnHoriMotionScroll();
                 fnQFloatMenu(curPageTop, motionTop);
+                fnScrollAction(curPageTop, motionTop);
             });
 
             $(window).resize(function(){
@@ -1340,6 +1348,51 @@
                 }
                 setInterval(timeAction, 2000);
             })
+        }
+
+        //스크롤 효과
+        function fnScrollAction(pos1, pos2){
+            $('.q-section').each(function(){ 
+                if(pos2 >= $(this).offset().top){
+                    if(!$(this).hasClass('active')){
+                        $(this).addClass('active');
+                        if ($(this).find('.stepMotion').length > 0 ) {   // && wtop < $section.offset().top + $section.outerHeight()
+                            fnStepMotion($(this).find('.stepMotion'), $(this).index());
+                        }
+                    }
+                }else{
+                    if($(this).hasClass('active')){
+                        $(this).removeClass('active');
+                        if ($(this).find('.stepMotion').length > 0) {
+                            fnStepMotionOff($(this).find('.stepMotion'), $(this).index());
+                        }
+                    }
+                }
+            });
+        }
+
+        //Step event
+        let timers = {};
+        function fnStepMotion(stepCont, stepContIndex){
+            const items = stepCont.find('li');
+            let idx = 0;
+
+            function addClassOn(){
+                if(idx < items.length){
+                    items.eq(idx).addClass('on');
+                    idx++;
+                    timers[stepContIndex] = setTimeout(addClassOn, 3000);
+                }
+            }      
+            addClassOn();            
+        }
+        
+        function fnStepMotionOff(stepCont, stepContIndex) {
+            stepCont.find('li').removeClass('on');
+            if (timers[stepContIndex]) {
+                clearTimeout(timers[stepContIndex]);
+                delete timers[stepContIndex];
+            }
         }
 
     })
